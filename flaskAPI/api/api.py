@@ -3,6 +3,7 @@ from flask import request, jsonify
 from bs4 import BeautifulSoup
 import requests
 import time
+import json
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -40,7 +41,7 @@ def api_url():
         title = soup.find_all('h2')
         cleanTitle = BeautifulSoup(str(title[0]), "lxml").get_text()
         info['title'] = cleanTitle
-        return info
+        return json.dumps(info)
     else:
         return "Error: No url field provided. Please specify an url."
 
@@ -77,7 +78,6 @@ def api_books_url():
         pagingUrl = "https://truyen.tangthuvien.vn/doc-truyen/page/" + hiddenId + "?page=0&limit=18446744073709551615&web=1"
         htmlTest = requests.get(pagingUrl)
         soupTest = BeautifulSoup(htmlTest.content,'html.parser')
-        print("--- %s seconds ---" % (time.time() - start_time))
 
         rowTest = soupTest.find_all('ul')
         chapters = rowTest[0].find_all('li')
@@ -94,13 +94,8 @@ def api_books_url():
                 info['season'].append(cleanSeason)
                 info['season_index'].append(len(info['chapter_name']))
 
-        if(len(chapters) < 75):
-            count = 75
-        else:
-            count+=1
         # https://truyen.tangthuvien.vn/doc-truyen/page/31803?page=1&limit=75&web=1
-        print("--- %s seconds ---" % (time.time() - start_time))
-        return info
+        return json.dumps(info)
     else:
         return "Error: No url field provided. Please specify an url."
         
