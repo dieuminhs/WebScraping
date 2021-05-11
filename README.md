@@ -20,5 +20,5 @@ e.g: http://127.0.0.1:5000/api/v1/books?url=https://truyen.tangthuvien.vn/doc-tr
   + "book_info": contains the book name
   + "chapter_name": contains the list of chapter name of the book
   + "link": contains the list of chapter link correspond to the chapter_name (link[i] will be the link for chapter_name[i])
-  + "season": some books will contain seasons and each season the chapter number will start over, this key will contain the season number and season name
-  + "season_index": indicate index of the beginning chapter of each season in chapter_name (season_index[i] will return beginning chapter index of season[i])
+  + "season": some books will contain seasons and each season the chapter number will start over, this key will contain the list of season number and season name
+  + "season_index": contains a list that indicate index of the beginning chapter of each season in chapter_name (season_index[i] will return beginning chapter index of season[i])
