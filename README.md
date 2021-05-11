@@ -46,5 +46,5 @@
       + "book_author": contains the author name of the book
       + "chapter_name": contains the list of chapter name of the book
       + "chapter_link": contains the list of chapter link correspond to the chapter_name (link[i] will be the link for chapter_name[i])
-      + "season": some books will contain seasons and each season the chapter number will start over, this key will contain the list of season number and season name
+      + "season_name": some books will contain seasons and each season the chapter number will start over, this key will contain the list of season number and season name
       + "season_index": contains a list that indicate index of the beginning chapter of each season in chapter_name (season_index[i] will return beginning chapter index of season[i]). This means the list of chapter of season[i] will from chapter_name[season_index[i]] to chapter_name[season_index[i+1]]
