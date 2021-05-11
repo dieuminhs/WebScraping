@@ -37,7 +37,7 @@
       + "chapter_title": contains the chapter title
       + "content": contains chapter contents
   + Get book details in the main page of a book (http://127.0.0.1:5000/api/v2/books?url=pageUrl)
-  + e.g: http://127.0.0.1:5000/api/v1/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
+  + e.g: http://127.0.0.1:5000/api/v2/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
   + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
     * The returned value will be in json format contains 8 keys:
       + "img_url": contains the url of the book cover
