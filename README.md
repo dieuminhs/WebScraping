@@ -32,14 +32,14 @@
   + Get book contents in a chapter page of a book (http://127.0.0.1:5000/api/v2/books/contents?url=pageUrl)
   + e.g: http://127.0.0.1:5000/api/v2/books/details?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
   + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
-    * The returned value will be in json format contains 2 keys:
+    * The returned value will be in json format contains 3 keys:
       + "book_title": contains the book title
       + "chapter_title": contains the chapter title
       + "content": contains chapter contents
   + Get book details in the main page of a book (http://127.0.0.1:5000/api/v2/books?url=pageUrl)
   + e.g: http://127.0.0.1:5000/api/v1/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
   + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
-    * The returned value will be in json format contains 6 keys:
+    * The returned value will be in json format contains 8 keys:
       + "img_url": contains the url of the book cover
       + "book_name": contains the book name
       + "book_intro": contains the book introduction
