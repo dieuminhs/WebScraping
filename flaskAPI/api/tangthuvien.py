@@ -4,23 +4,11 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-app = flask.Flask(__name__)
-app.config["DEBUG"] = True
-
-@app.route('/', methods=['GET'])
-def home():
-    return '''<h1>Distant Reading Archive</h1>
-<p>A prototype API for distant reading of science fiction novels.</p>'''
-
-@app.route('/api/v1/books/details', methods=['GET'])
-def api_url_v1():
+def api_url_v1(html):
+    # Check if an ID was provided as part of the URL.
+    # If ID is provided, assign it to a variable.
+    # If no ID is provided, display an error in the browser.
     if 'url' in request.args:
-        url = request.args['url']
-        html = requests.get(url)
-
-        # Check if an ID was provided as part of the URL.
-        # If ID is provided, assign it to a variable.
-        # If no ID is provided, display an error in the browser.
         soup = BeautifulSoup(html.content,'html.parser')
         rows = soup.find_all('div')
 
@@ -44,17 +32,16 @@ def api_url_v1():
     else:
         return "Error: No url field provided. Please specify an url."
 
-@app.route('/api/v1/books', methods=['GET'])
-def api_books_url_v1():
+def api_books_url_v1(html):
+    # Check if an ID was provided as part of the URL.
+    # If ID is provided, assign it to a variable.
+    # If no ID is provided, display an error in the browser.
     if 'url' in request.args:
-        info = {}
-        url = request.args['url']
-        html = requests.get(url)
-
-        # Check if an ID was provided as part of the URL.
-        # If ID is provided, assign it to a variable.
-        # If no ID is provided, display an error in the browser.
         soup = BeautifulSoup(html.content,'html.parser')
+
+        # Create an empty dictionary for our results
+        info = {}
+
         bookImg = soup.find_all('a',attrs ={"id":"bookImg"})
         info['img_url'] = bookImg[0].find('img')['src']
 
@@ -82,7 +69,7 @@ def api_books_url_v1():
         for chap in chapters:
             try:
                 info['chapter_name'].append(chap.find_all('a')[0]['title'])
-                info['chapter_link'].append(chap.find_all('a')[0]['href'])
+                info['chapter'].append(chap.find_all('a')[0]['href'])
             except:
                 season = chap.find_all('span')
                 cleanSeason = BeautifulSoup(str(season[0]), "lxml").get_text()
@@ -96,105 +83,81 @@ def api_books_url_v1():
     else:
         return "Error: No url field provided. Please specify an url."
 
-@app.route('/api/v2/books/details', methods=['GET'])
-def api_url_v2():
-    if 'url' in request.args:
-        url = request.args['url']
-        html = requests.get(url)
+def api_books_details(url):
+    html = requests.get(url)    
+    soup = BeautifulSoup(html.content,'html.parser')
 
-        # Check if an ID was provided as part of the URL.
-        # If ID is provided, assign it to a variable.
-        # If no ID is provided, display an error in the browser.
-        soup = BeautifulSoup(html.content,'html.parser')
+    # Create an empty dictionary for our results
+    info = {}
 
-        # Create an empty dictionary for our results
-        info = {}
+    # Find chapter title and book title container
+    info['book_title'] = soup.find('h1', attrs={"class":"truyen-title"}).find('a')['title']   
+    info['chapter_title'] = soup.find('h2').get_text()
 
-        # Find chapter title and book title container
-        chapter_title = soup.find('h2')
-        clean_chapter_title = BeautifulSoup(str(chapter_title), "lxml").get_text()
+    rows = soup.find_all('div')
 
-        book_title = soup.find('h1', attrs={"class":"truyen-title"}).find('a')['title']
-        clean_book_title = BeautifulSoup(str(book_title), "lxml").get_text()
+    # Loop through the data and match results that fit the requested url.        
+    for index in range(len(rows)):
+        if index < 40:
+            continue
+        row = rows[index]
+        if "box-chap box-chap" in str(row):
+            info['content'] = row.get_text()
+            break
 
-        info['book_title'] = clean_book_title
-        info['chapter_title'] = clean_chapter_title
+    with open('book_details_data.txt', 'w') as outfile:
+        json.dump(info, outfile)  
+              
+    return json.dumps(info)
 
-        rows = soup.find_all('div')
+def api_books_v2(url):
+    html = requests.get(url)    
+    soup = BeautifulSoup(html.content,'html.parser')
 
-        # Loop through the data and match results that fit the requested url.        
-        for index in range(len(rows)):
-            if index < 40:
+    # Create an empty dictionary for our results
+    info = {}
+
+    # Find book cover image container
+    info['img_url'] = soup.find('a', attrs ={"id":"bookImg"}).find('img')['src']
+
+    # Find book name, book info and book author container
+    info['book_name'] = soup.find('h1').get_text()
+    info['book_author'] = soup.find('div', attrs ={'id':'authorId'}).find('p').get_text()    
+    info['book_intro'] = soup.find('div', attrs ={'class':'book-intro'}).find('p').get_text()
+
+    # Create lists to store multiple chapters and seasons
+    info['chapter_name'] = []
+    info['chapter_link'] = []
+    info['season_name'] = []
+    info['season_index'] = []
+
+    # Find first season container
+    info['season_name'].append(soup.find('li', attrs ={"class":"divider-chap"}).get_text())
+    info['season_index'].append(0)
+    
+    # Find chapters and seasons container
+    book_id = soup.find('meta', attrs ={"name":"book_detail"})
+    hidden_id = book_id['content']
+    hidden_url = "https://truyen.tangthuvien.vn/doc-truyen/page/" + hidden_id + "?page=0&limit=18446744073709551615&web=1"
+    hidden_html = requests.get(hidden_url)
+    hidden_soup = BeautifulSoup(hidden_html.content, 'html.parser')
+    chapters = hidden_soup.find('ul').find_all('li')
+
+    # Loop through chapters list to push chapters and seasons into container list
+    for chap in chapters:
+        try:
+            info['chapter_name'].append(chap.find('a')['title'])
+            info['chapter_link'].append(chap.find('a')['href'])
+        except:
+            season = chap.find('span').get_text()
+            if info['season_name'][len(info['season_name']) - 1][:8] == season[:8]:
                 continue
-            row = rows[index]
-            str_rows = str(row)
-            if "box-chap box-chap" in str_rows:
-                clean_text = BeautifulSoup(str_rows, "lxml").get_text()    
-                info['content'] = clean_text
-                break
+            info['season_name'].append(season)
+            info['season_index'].append(len(info['chapter_name']))
 
-        return json.dumps(info)
-    else:
-        return "Error: No url field provided. Please specify an url."
+    info['season_index'].append(len(info['chapter_name']))
+    with open('book_data.txt', 'w') as outfile:
+        json.dump(info, outfile)        
 
-@app.route('/api/v2/books', methods=['GET'])
-def api_books_url_v2():
-    if 'url' in request.args:
-        info = {}
-        url = request.args['url']
-        html = requests.get(url)
+    return json.dumps(info)
 
-        # Check if an ID was provided as part of the URL.
-        # If ID is provided, assign it to a variable.
-        # If no ID is provided, display an error in the browser.
-        soup = BeautifulSoup(html.content,'html.parser')
-
-        # Find book cover image container
-        book_img = soup.find('a',attrs ={"id":"bookImg"})
-        info['img_url'] = book_img.find('img')['src']
-
-        # Find book name, book info and book author container
-        book_name = soup.find('h1')
-        info['book_name'] = BeautifulSoup(str(book_name), "lxml").get_text()
-        info['book_intro'] = soup.find('div', attrs ={'class':'book-intro'}).find('p').get_text()
-        info['book_author'] = soup.find('div', attrs ={'id':'authorId'}).find('p').get_text()
-
-        # Create lists to store multiple chapters and seasons
-        info['chapter_name'] = []
-        info['chapter_link'] = []
-        info['season_name'] = []
-        info['season_index'] = []
-
-        # find first season container
-        first_season = soup.find('li', attrs ={"class":"divider-chap"})
-        clean_first_season = BeautifulSoup(str(first_season), "lxml").get_text()
-        info['season_name'].append(clean_first_season)
-        info['season_index'].append(0)
-        
-        # find chapters and seasons container
-        book_id = soup.find('meta', attrs ={"name":"book_detail"})
-        hidden_id = book_id['content']
-        hidden_url = "https://truyen.tangthuvien.vn/doc-truyen/page/" + hidden_id + "?page=0&limit=18446744073709551615&web=1"
-        hidden_html = requests.get(hidden_url)
-        hidden_soup = BeautifulSoup(hidden_html.content,'html.parser')
-
-        chapters = hidden_soup.find('ul').find_all('li')
-        for chap in chapters:
-            try:
-                info['chapter_name'].append(chap.find('a')['title'])
-                info['chapter_link'].append(chap.find('a')['href'])
-            except:
-                season = chap.find('span')
-                clean_season = BeautifulSoup(str(season), "lxml").get_text()
-                if info['season_name'][len(info['season_name']) - 1][:8] == clean_season[:8]:
-                    continue
-                info['season_name'].append(clean_season)
-                info['season_index'].append(len(info['chapter_name']))
-
-        info['season_index'].append(len(info['chapter_name']))
-
-        return json.dumps(info)
-    else:
-        return "Error: No url field provided. Please specify an url."
-        
-app.run()
