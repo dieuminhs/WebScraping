@@ -1,8 +1,9 @@
-import sys 
 import os
+import sys
 import flask
 from flask import request
-sys.path.append(os.path.abspath("WebScraping/app/api"))
+sys.path.append("Webscraping/app/api")
+
 import tangthuvien as ttv
 import truyenchu as tc
 import sstruyen as sst
@@ -56,5 +57,3 @@ def app_url():
 
     else:
         return "Error: No url field provided. Please specify an url."
-
-app.run()
