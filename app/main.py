@@ -2,7 +2,7 @@ import sys
 import os
 import flask
 from flask import request
-sys.path.append(os.path.abspath("WebScraping/flaskAPI/api"))
+sys.path.append(os.path.abspath("WebScraping/app/api"))
 import tangthuvien as ttv
 import truyenchu as tc
 import sstruyen as sst
