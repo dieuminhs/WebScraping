@@ -15,6 +15,7 @@
         + "book_title": contains the book title
         + "chapter_title": contains the chapter title
         + "content": contains chapter contents
+    + You can use http://127.0.0.1:5000/api/chapters?url=pageUrl as alternative url
   + Get book details in the main page of a book (http://127.0.0.1:5000/api/books?url=pageUrl)
     + e.g: http://127.0.0.1:5000/api/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
     + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
@@ -37,7 +38,7 @@
   + Get book contents in a chapter page of a book (https://flask-web-scraping.herokuapp.com/api/books/contents?url=pageUrl)
     + e.g: https://flask-web-scraping.herokuapp.com/api/books/contents?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
     + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
-
+    + You can use https://flask-web-scraping.herokuapp.com/api/chapters?url=pageUrl as alternative url
 
   + Get book details in the main page of a book (https://flask-web-scraping.herokuapp.com/api/books?url=pageUrl)
     + e.g: https://flask-web-scraping.herokuapp.com/api/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
