@@ -82,7 +82,7 @@ def api_books_url_v1(html):
     else:
         return "Error: No url field provided. Please specify an url."
 
-def api_books_details(url):
+def api_books_contents(url):
     html = requests.get(url)    
     soup = BeautifulSoup(html.content,'html.parser')
 

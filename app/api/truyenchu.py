@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-def api_books_details(url):
+def api_books_contents(url):
     html = requests.get(url)        
     soup = BeautifulSoup(html.content,'html.parser')
 

@@ -33,7 +33,7 @@ def app_books_url():
 
         return module.api_books(url)
 
-@app.route('/api/books/details', methods=['GET'])
+@app.route('/api/books/contents', methods=['GET'])
 def app_url():
     # Check if an ID was provided as part of the URL.
     # If ID is provided, assign it to a variable.
@@ -50,7 +50,7 @@ def app_url():
         elif 'truyenplus.vn' in url:
             module = tp
 
-        return module.api_books_details(url)
+        return module.api_books_contents(url)
 
     else:
         return "Error: No url field provided. Please specify an url."
