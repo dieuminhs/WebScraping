@@ -1,13 +1,10 @@
-import os
-import sys
 import flask
 from flask import request
-sys.path.append("Webscraping/app/api")
 
-import tangthuvien as ttv
-import truyenchu as tc
-import sstruyen as sst
-import truyenplus as tp
+import app.api.tangthuvien as ttv
+import app.api.truyenchu as tc
+import app.api.sstruyen as sst
+import app.api.truyenplus as tp
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
