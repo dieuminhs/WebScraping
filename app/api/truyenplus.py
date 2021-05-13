@@ -1,9 +1,6 @@
-import flask
-from flask import request
 from bs4 import BeautifulSoup
 import requests
 import json
-import urllib
 
 def api_books_details(url):
     html = requests.get(url)    

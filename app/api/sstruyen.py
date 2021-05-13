@@ -1,5 +1,3 @@
-import flask
-from flask import request
 from bs4 import BeautifulSoup
 import requests
 import json

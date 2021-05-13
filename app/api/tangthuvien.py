@@ -1,4 +1,3 @@
-import flask
 from flask import request
 from bs4 import BeautifulSoup
 import requests
@@ -110,7 +109,7 @@ def api_books_details(url):
               
     return json.dumps(info)
 
-def api_books_v2(url):
+def api_books(url):
     html = requests.get(url)    
     soup = BeautifulSoup(html.content,'html.parser')
 
