@@ -9,7 +9,7 @@
 - The local server is running on http://127.0.0.1:5000/
 - There are currently 2 function available:
   + Get book contents in a chapter page of a book (http://127.0.0.1:5000/api/books/contents?url=pageUrl)
-    + e.g: http://127.0.0.1:5000/api/books/details?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
+    + e.g: http://127.0.0.1:5000/api/books/contents?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
     + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
       * The returned value will be in json format contains 3 keys:
         + "book_title": contains the book title
@@ -35,10 +35,10 @@
 - The deployed server is running on https://flask-web-scraping.herokuapp.com/
 - There are currently 2 function available:
   + Get book contents in a chapter page of a book (https://flask-web-scraping.herokuapp.com/api/books/contents?url=pageUrl)
-    + e.g: http://127.0.0.1:5000/api/books/details?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
+    + e.g: https://flask-web-scraping.herokuapp.com/api/books/contents?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
     + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
 
 
   + Get book details in the main page of a book (https://flask-web-scraping.herokuapp.com/api/books?url=pageUrl)
-    + e.g: http://127.0.0.1:5000/api/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
+    + e.g: https://flask-web-scraping.herokuapp.com/api/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
     + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
