@@ -8,6 +8,7 @@ def api_books_contents(url):
 
     # Create an empty dictionary for our results
     info = {}
+    info['source'] = 'sstruyen.com'
 
     # Find chapter title and book title container
     book_title = soup.find('h1', attrs={"class":"story-title"}).find('a')['title']
@@ -31,6 +32,7 @@ def api_books(url):
 
     # Create an empty dictionary for our results
     info = {}
+    info['source'] = 'sstruyen.com'
 
     # "Domain name to access data"
     domain = 'https://sstruyen.com/'

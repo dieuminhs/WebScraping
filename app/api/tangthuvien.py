@@ -13,6 +13,7 @@ def api_url_v1(html):
 
         # Create an empty dictionary for our results
         info = {}
+
         # Loop through the data and match results that fit the requested url.        
         for index in range(len(rows)):
             if index < 40:
@@ -88,6 +89,7 @@ def api_books_contents(url):
 
     # Create an empty dictionary for our results
     info = {}
+    info['source'] = 'truyen.tangthuvien.vn'
 
     # Find chapter title and book title container
     info['book_title'] = soup.find('h1', attrs={"class":"truyen-title"}).find('a')['title']   
@@ -115,6 +117,7 @@ def api_books(url):
 
     # Create an empty dictionary for our results
     info = {}
+    info['source'] = 'truyen.tangthuvien.vn'
 
     # Find book cover image container
     info['img_url'] = soup.find('a', attrs ={"id":"bookImg"}).find('img')['src']
