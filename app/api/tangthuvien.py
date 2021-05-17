@@ -117,7 +117,13 @@ def api_books(url):
 
     # Create an empty dictionary for our results
     info = {}
+
+    # Add book source
     info['source'] = 'truyen.tangthuvien.vn'
+
+    # Find book id container    
+    book_id = soup.find('meta', attrs ={"name":"book_detail"})['content']
+    info['book_id'] = book_id
 
     # Find book cover image container
     info['img_url'] = soup.find('a', attrs ={"id":"bookImg"}).find('img')['src']
@@ -138,9 +144,7 @@ def api_books(url):
     info['season_index'].append(0)
     
     # Find chapters and seasons container
-    book_id = soup.find('meta', attrs ={"name":"book_detail"})
-    hidden_id = book_id['content']
-    hidden_url = "https://truyen.tangthuvien.vn/doc-truyen/page/" + hidden_id + "?page=0&limit=18446744073709551615&web=1"
+    hidden_url = "https://truyen.tangthuvien.vn/doc-truyen/page/" + book_id + "?page=0&limit=18446744073709551615&web=1"
     hidden_html = requests.get(hidden_url)
     hidden_soup = BeautifulSoup(hidden_html.content, 'html.parser')
     chapters = hidden_soup.find('ul').find_all('li')

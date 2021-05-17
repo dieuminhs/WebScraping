@@ -32,7 +32,13 @@ def api_books(url):
 
     # Create an empty dictionary for our results
     info = {}
+
+    # Add book source    
     info['source'] = 'truyenchu.vn'
+
+    # Find book id container    
+    book_id = soup.find('input', attrs ={'id':'truyen-id'})['value']
+    info['book_id'] = book_id
 
     # "Domain name to access data"
     domain = 'https://truyenchu.vn'
@@ -57,7 +63,6 @@ def api_books(url):
     
     # Find chapters container
     count = 1
-    book_id = soup.find('input', attrs ={'id':'truyen-id'})['value']
     while True:
         paging_url = 'https://truyenchu.vn/api/services/list-chapter?type=list_chapter&tid=' + str(book_id) + '&page=' + str(count)
         paging_html = requests.get(paging_url)
