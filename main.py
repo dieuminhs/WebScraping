@@ -1,6 +1,5 @@
 import flask
 from flask import request
-
 import app.api.tangthuvien as ttv
 import app.api.truyenchu as tc
 import app.api.sstruyen as sst
@@ -15,7 +14,7 @@ def home():
 <p>A prototype API for distant reading of science fiction novels.</p>'''
 
 @app.route('/api/books', methods=['GET'])
-def book_books_url():
+def books_url():
     # Check if an ID was provided as part of the URL.
     # If ID is provided, assign it to a variable.
     # If no ID is provided, display an error in the browser.
@@ -76,3 +75,22 @@ def chapters_url():
 
     else:
         return "Error: No url field provided. Please specify an url."
+
+@app.route('/api/async/books', methods=['GET'])
+def async_books_url():
+    # Check if an ID was provided as part of the URL.
+    # If ID is provided, assign it to a variable.
+    # If no ID is provided, display an error in the browser.
+    if 'url' in request.args:
+        url = request.args['url']
+
+        if 'truyen.tangthuvien.vn' in url:
+            module = ttv
+        elif 'truyenchu.vn' in url:
+            module = tc
+        elif 'sstruyen.com' in url:
+            module = sst
+        elif 'truyenplus.vn' in url:
+            module = tp
+
+        return module.async_api_books(url)
