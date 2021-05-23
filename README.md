@@ -1,9 +1,10 @@
 # WebScraping
 ## 1/ Installation instruction:
 - Install python (https://www.python.org/downloads/), check yes for Environment Path
-- Install flask, beautifulsoup4, requests, lxml (use pip install "package" in the command line)
+- Install flask, beautifulsoup4, requests, lxml, grequest (use the below command in command line)
++ Command line: pip install flask bs4 requests lxml grequest
 - Run the local server using:
-  + Run using command line (python app.py)
+  + Run using command line (python wsgi.py)
   + Run build using a code editor, tools (Visual studio code, Visual studio 20xx, Jupyter notebook)
 ## 2/ Local server usage:
 - The local server is running on http://127.0.0.1:5000/
