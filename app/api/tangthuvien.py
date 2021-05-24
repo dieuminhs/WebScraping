@@ -1,15 +1,12 @@
 from flask import request
 from bs4 import BeautifulSoup
-import grequests
+# import grequests
 import requests
 import json
+import asyncio
+import aiohttp
 
 # import time
-# import aiohttp
-# import asyncio
-# import os
-
-# from aiohttp import ClientSession
 
 def api_books_contents(url):
     html = requests.get(url)    
@@ -38,12 +35,10 @@ def api_books_contents(url):
         json.dump(info, outfile)  
     return json.dumps(info)
 
-def async_books_contents(html):    
-    soup = BeautifulSoup(html.content,'html.parser')
+def async_books_contents(soup):    
     # Create an empty dictionary for our results
     info = {}
     info['source'] = 'truyen.tangthuvien.vn'
-
     # Find chapter title and book title container
     info['book_title'] = soup.find('h1', attrs={"class":"truyen-title"}).find('a')['title']   
     info['chapter_title'] = soup.find('h2').get_text()
@@ -63,6 +58,7 @@ def async_books_contents(html):
 
 def exception_handler(request, exception):
     print("Request failed")
+    print(exception)
 
 def api_books(url):
     html = requests.get(url)
@@ -118,6 +114,27 @@ def api_books(url):
 
     return json.dumps(info)
 
+async def get(semaphore, url, session, timeout=10):
+    try:
+        async with semaphore:
+            # with async_timeout.timeout(timeout):
+                async with session.get(url=url) as response:
+                    
+                    resp = await response.read()
+                    soup = BeautifulSoup(resp.decode('utf-8'), 'html5lib')
+
+                    return soup
+    except Exception as e:
+        print("Unable to get url {} due to {}.".format(url, e.__class__))
+
+
+async def get_chapters(urls):
+    sem = asyncio.Semaphore(1)
+    
+    async with aiohttp.ClientSession() as session:
+        ret = await asyncio.gather(*[get(sem, url, session) for url in urls])
+    return ret         
+
 def async_api_books(url):
     html = requests.get(url)
     soup = BeautifulSoup(html.content,'html.parser')
@@ -171,34 +188,46 @@ def async_api_books(url):
     info['season_index'].append(len(info['chapter_name']))   
 
     info['chapter_contents'] = [None] * len(info['chapter_link'])
-    htmls = []
 
+    # htmls = []
+    # start = time.time()
     # for i in range(0, len(info['chapter_link']), 5):
     #     rs = (grequests.get(link) for link in info['chapter_link'][i:i+5])
     #     htmls.extend(grequests.map(rs, exception_handler=exception_handler))
-    #     time.sleep(0.1)
+    #     time.sleep(0.5)
+    # end = time.time()
+    # print(end-start)
+    # print(htmls)
+    # for idx, html in enumerate(htmls):
+    #     info['chapter_contents'][idx] = async_books_contents(BeautifulSoup(html.content, 'html.parser'))
 
-    rs = (grequests.get(link) for link in info['chapter_link'])
-    htmls.extend(grequests.map(rs, exception_handler = exception_handler))
+    # rs = (grequests.get(link) for link in info['chapter_link'])
+    # htmls.extend(grequests.map(rs, exception_handler = exception_handler))
 
-    while True:
-        request_again = [[], []]
-        for idx, html in enumerate(htmls):
-            if html.status_code == 503:
-                request_again[0].append(info['chapter_link'][idx])
-                request_again[1].append(idx)
+    # while True:
+    #     request_again = [[], []]
+    #     for idx, html in enumerate(htmls):
+    #         if html.status_code == 503:
+    #             request_again[0].append(info['chapter_link'][idx])
+    #             request_again[1].append(idx)
                  
-        if len(request_again[0]) == 0:
-            break    
+    #     if len(request_again[0]) == 0:
+    #         break    
 
-        rs = (grequests.get(link) for link in request_again[0])
-        htmls_again = grequests.map(rs, exception_handler = exception_handler)
-        for idx_again, html_again in enumerate(htmls_again):
-            htmls[request_again[1][idx_again]] = html_again
+    #     rs = (grequests.get(link) for link in request_again[0])
+    #     htmls_again = grequests.map(rs, exception_handler = exception_handler)
+    #     for idx_again, html_again in enumerate(htmls_again):
+    #         htmls[request_again[1][idx_again]] = html_again
 
-    for idx, html in enumerate(htmls):
-        print(idx)
-        info['chapter_contents'][idx] = async_books_contents(html)
+    # start = time.time()
+
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    soups = asyncio.run(get_chapters(info['chapter_link']))
+    # end = time.time()
+    # print(end-start)
+    
+    for idx, soup in enumerate(soups):
+        info['chapter_contents'][idx] = async_books_contents(soup)
 
     return json.dumps(info)
 
