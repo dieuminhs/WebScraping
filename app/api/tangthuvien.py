@@ -221,8 +221,9 @@ def async_api_books(url):
 
     # start = time.time()
 
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    soups = asyncio.run(get_chapters(info['chapter_link']))
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    soups = loop.run_until_complete(get_chapters(info['chapter_link']))
     # end = time.time()
     # print(end-start)
     
