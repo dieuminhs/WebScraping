@@ -1,8 +1,8 @@
 # WebScraping
 ## 1/ Installation instruction:
 - Install python (https://www.python.org/downloads/), check yes for Environment Path
-- Install flask, beautifulsoup4, requests, lxml, asyncio, aiohttp (use the below command in command line)
-+ Command line: pip install flask bs4 requests lxml asyncio aiohttp
+- Install flask, beautifulsoup4, requests, lxml, html5lib, asyncio, aiohttp (use the below command in command line)
++ Command line: pip install flask bs4 requests lxml html5lib asyncio aiohttp
 - Run the local server using:
   + Run using command line (python wsgi.py)
   + Run build using a code editor, tools (Visual studio code, Visual studio 20xx, Jupyter notebook)
