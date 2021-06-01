@@ -6,7 +6,7 @@ import app.api.sstruyen as sst
 import app.api.truyenplus as tp
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+# app.config["DEBUG"] = True
 
 @app.route('/', methods=['GET'])
 def home():
@@ -29,7 +29,6 @@ def books_url():
             module = sst
         elif 'truyenplus.vn' in url:
             module = tp
-
         return module.api_books(url)
 
 @app.route('/api/books/contents', methods=['GET'])

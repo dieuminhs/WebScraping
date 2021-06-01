@@ -5,6 +5,7 @@ import requests
 import json
 import asyncio
 import aiohttp
+# import async_timeout
 
 # import time
 
@@ -17,8 +18,24 @@ def api_books_contents(url):
     info['source'] = 'truyen.tangthuvien.vn'
 
     # Find chapter title and book title container
+    chapter_source = soup.find('h1', attrs={"class":"truyen-title"}).find('a')['href'] + "/chuong-"
+    chapter_index = int(url[len(chapter_source):])
+
     info['book_title'] = soup.find('h1', attrs={"class":"truyen-title"}).find('a')['title']   
     info['chapter_title'] = soup.find('h2').get_text()
+    info['next_chap'] = "" 
+    info['prev_chap'] = "" 
+    
+    check_prev = soup.find('div', attrs={'class':'box-content'}).find('a', attrs={'class':'bot-prev_chap bot-control'})
+    check_next = soup.find('div', attrs={'class':'box-content'}).find('a', attrs={'class':'bot-next_chap bot-control'})
+    if check_prev != None:
+        if chapter_index > 1:
+            info['prev_chap'] = chapter_source + str(chapter_index -1)
+
+    if check_next != None:
+        total = int(check_next['onclick'][10:][:-3])
+        if chapter_index <= total:
+            info['next_chap'] = chapter_source + str(chapter_index + 1)
 
     rows = soup.find_all('div')
 
@@ -31,8 +48,6 @@ def api_books_contents(url):
             info['content'] = row.get_text()
             break
 
-    with open('book_details_data.txt', 'w') as outfile:
-        json.dump(info, outfile)  
     return json.dumps(info)
 
 def async_books_contents(soup):    
@@ -55,10 +70,6 @@ def async_books_contents(soup):
             break
 
     return json.dumps(info)
-
-def exception_handler(request, exception):
-    print("Request failed")
-    print(exception)
 
 def api_books(url):
     html = requests.get(url)
@@ -119,7 +130,7 @@ async def get(semaphore, url, session, timeout=10):
         async with semaphore:
             # with async_timeout.timeout(timeout):
                 async with session.get(url=url) as response:
-                    
+                    # print(response.status)
                     resp = await response.read()
                     soup = BeautifulSoup(resp.decode('utf-8'), 'html5lib')
 
@@ -127,12 +138,13 @@ async def get(semaphore, url, session, timeout=10):
     except Exception as e:
         print("Unable to get url {} due to {}.".format(url, e.__class__))
 
-
 async def get_chapters(urls):
     sem = asyncio.Semaphore(1)
-    
+    # timeout = 3.5
+    # with async_timeout.timeout(timeout):
     async with aiohttp.ClientSession() as session:
         ret = await asyncio.gather(*[get(sem, url, session) for url in urls])
+
     return ret         
 
 def async_api_books(url):
@@ -226,7 +238,8 @@ def async_api_books(url):
     soups = loop.run_until_complete(get_chapters(info['chapter_link']))
     # end = time.time()
     # print(end-start)
-    
+
+
     for idx, soup in enumerate(soups):
         info['chapter_contents'][idx] = async_books_contents(soup)
 
