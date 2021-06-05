@@ -42,17 +42,19 @@
     2/ truyenchu.vn (This site doesn't seperate seasons with chapters so the size of season_name and season_index will be 0)
     
 ## 3/ Deployed server usage:
-- The deployed server is running on https://flask-web-scraping.herokuapp.com/
+- The deployed server is running on https://ebook-main-server.herokuapp.com/
 - There are currently 2 function available:
-  + Get book details from the chapter page of a book (https://flask-web-scraping.herokuapp.com/api/books/contents?url=pageUrl)
-    + e.g: https://flask-web-scraping.herokuapp.com/api/books/contents?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
+  + Get book details from the chapter page of a book (https://ebook-main-server.herokuapp.com/api/books/contents?url=pageUrl)
+    + e.g: https://ebook-main-server.herokuapp.com/api/books/contents?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
     + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien/chuong-4
-    + You can use https://flask-web-scraping.herokuapp.com/api/chapters?url=pageUrl as alternative url
+    + You can use https://ebook-main-server.herokuapp.com/api/chapters?url=pageUrl as alternative url
 
-  + Get book details from the main page of a book (https://flask-web-scraping.herokuapp.com/api/books?url=pageUrl)
-    + e.g: https://flask-web-scraping.herokuapp.com/api/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
+  + Get book details from the main page of a book (https://ebook-main-server.herokuapp.com/api/books?url=pageUrl)
+    + e.g: https://ebook-main-server.herokuapp.com/api/books?url=https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
     + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/luan-hoi-nhac-vien
 
-  + Get book details and chapter details asynchronously from the main page of a book (https://flask-web-scraping.herokuapp.com/api/async/books?url=pageUrl)
-    + e.g: https://flask-web-scraping.herokuapp.com/api/async/books?url=https://truyen.tangthuvien.vn/doc-truyen/truong-da-du-hoa
+  + Get book details and chapter details asynchronously from the main page of a book (https://ebook-main-server.herokuapp.com/api/async/books?url=pageUrl)
+    + e.g: https://ebook-main-server.herokuapp.com/api/async/books?url=https://truyen.tangthuvien.vn/doc-truyen/truong-da-du-hoa
     + pageUrl: https://truyen.tangthuvien.vn/doc-truyen/truong-da-du-hoa
+
+## *** Important note: The deployed server has changed its domain from https://flask-web-scraping.herokuapp.com/ to https://ebook-main-server.herokuapp.com/.  The old domain still works but it won't be updated any further.
